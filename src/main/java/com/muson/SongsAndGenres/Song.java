@@ -1,6 +1,5 @@
 package com.muson.SongsAndGenres;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 
@@ -21,7 +20,7 @@ public class Song {
     public Song(String songName, String artistName) {
         this.song = songName;
         this.artist = artistName;
-        this.id = new String(artistName + songName).hashCode();
+        this.id = (artistName + songName).hashCode();
     }
 
     public Song(String songName, String artistName, String genre, String directory, int id) {
