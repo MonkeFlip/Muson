@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String login;
     private int password;
@@ -16,6 +15,7 @@ public class User {
     }
 
     public User(String login, String password, String email) {
+        this.id = (login + email).hashCode();
         this.login = login;
         this.password = password.hashCode();
         this.email=email;
