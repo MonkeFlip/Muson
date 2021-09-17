@@ -1,17 +1,15 @@
 package com.muson.Authorization;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String login;
-    private String password;
+    private int password;
     private String email;
 
     public User() {
@@ -19,7 +17,7 @@ public class User {
 
     public User(String login, String password, String email) {
         this.login = login;
-        this.password = password;
+        this.password = password.hashCode();
         this.email=email;
     }
 
@@ -39,13 +37,9 @@ public class User {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public int getPassword() { return password; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setPassword(int password) { this.password = password; }
 
     public String getEmail() {
         return email;

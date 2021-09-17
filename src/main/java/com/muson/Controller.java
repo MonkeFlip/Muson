@@ -41,7 +41,7 @@ public class Controller {
     @GetMapping ("/registration")
     public ResponseEntity<User> registration(@RequestParam(value ="login", defaultValue ="0") String login,  @RequestParam (value="password", defaultValue ="0") String password, @RequestParam(value="email", defaultValue ="0") String email){
         User user=new User(login, password, email);
-//        userDAO.save(user); //there is no DB now...
+        userDAO.save(user); //there is no DB now...
         return new ResponseEntity<User>(user,HttpStatus.OK);
     }
 
