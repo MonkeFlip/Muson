@@ -19,7 +19,7 @@ public class Controller {
     @Autowired
     private GenreDAO genreDAO;//performs all DB operations related to table "genres"
 
-    //Examples
+
     @GetMapping("/playSong")
     public Song returnSongInfo(@RequestParam(value = "songName", defaultValue = "default song") String songName, @RequestParam(value = "artistName", defaultValue = "default song") String artistName)
     {
