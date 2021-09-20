@@ -37,8 +37,20 @@ public class UserResource {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
+    @GetMapping("/identify")
+    public String identify(HttpServletRequest request)
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
+        return username;
+    }
+
     @PostMapping("/registration")
-    public ResponseEntity<MusUser>saveUser(HttpServletRequest request)
+    public ResponseEntity<?>saveUser(HttpServletRequest request)
     {
         URI uri = URI.create(
                 ServletUriComponentsBuilder
@@ -46,6 +58,17 @@ public class UserResource {
                         .path("/api/registration")
                         .toUriString());
         MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>());
+        try
+        {
+            if (!UniquenessIdentifier.IsUserUnique(mem_user, userService))
+            {
+                throw new Exception();
+            }
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body("This username has already taken by another user.");
+        }
         userService.saveUser(mem_user);
         userService.addRoleToUser(mem_user.getUsername(), "ROLE_USER");
         return ResponseEntity.created(uri).body(mem_user);
@@ -69,6 +92,7 @@ public class UserResource {
         return ResponseEntity.ok().build();
     }
 
+    //TODO: Refresh token doesn't work.
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -103,6 +127,19 @@ public class UserResource {
         else {
             throw new RuntimeException("Refresh token is missing.");
         }
+    }
+}
+
+class UniquenessIdentifier
+{
+    static boolean IsUserUnique(MusUser user, UserService userService)
+    {
+        if (userService.getUser(user.getUsername()) != null)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
 
