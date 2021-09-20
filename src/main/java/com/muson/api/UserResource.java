@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -40,15 +37,18 @@ public class UserResource {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @PostMapping("/user/save")
-    public ResponseEntity<MusUser>saveUser(@RequestBody MusUser user)
+    @PostMapping("/registration")
+    public ResponseEntity<MusUser>saveUser(HttpServletRequest request)
     {
         URI uri = URI.create(
                 ServletUriComponentsBuilder
                         .fromCurrentContextPath()
-                        .path("/api/user/save")
+                        .path("/api/registration")
                         .toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
+        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>());
+        userService.saveUser(mem_user);
+        userService.addRoleToUser(mem_user.getUsername(), "ROLE_USER");
+        return ResponseEntity.created(uri).body(mem_user);
     }
 
     @PostMapping("/role/save")
