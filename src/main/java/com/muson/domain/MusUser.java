@@ -1,5 +1,6 @@
 package com.muson.domain;
 
+import com.muson.SongsAndGenres.Song;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,6 @@ public class MusUser {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Collection<Song> favouriteSongs = new ArrayList<>();
 }

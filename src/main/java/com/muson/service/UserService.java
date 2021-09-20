@@ -11,6 +11,7 @@ public interface UserService {
     MusUser saveUser(MusUser user);
     Role saveRole(Role role);
     void addRoleToUser(String username, String roleName);
+    void addFavSongToUser(String username, int songId);
     MusUser getUser(String username);
     List<MusUser>getUsers();
 }

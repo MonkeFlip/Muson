@@ -2,6 +2,8 @@ package com.muson.service;
 
 
 
+import com.muson.SongsAndGenres.Song;
+import com.muson.SongsAndGenres.SongRepo;
 import com.muson.domain.MusUser;
 import com.muson.domain.Role;
 import com.muson.repo.RoleRepo;
@@ -24,6 +26,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
+    private final SongRepo songRepo;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -63,6 +66,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         MusUser musUser = userRepo.findByUsername(username);
         Role role = roleRepo.findByName(roleName);
         musUser.getRoles().add(role);
+    }
+
+    @Override
+    public void addFavSongToUser(String username, int songId) {
+        log.info("Adding favourite song {} to user {}", songId, username);
+        MusUser musUser = userRepo.findByUsername(username);
+        Song song = songRepo.findById(songId);
+        musUser.getFavouriteSongs().add(song);
     }
 
     @Override
