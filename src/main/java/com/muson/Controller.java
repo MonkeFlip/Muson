@@ -16,6 +16,7 @@ import java.util.List;
 public class Controller {
     @Autowired
     private GenreDAO genreDAO;//performs all DB operations related to table "genres"
+    @Autowired
     private SongRepo songRepo;//performs all DB operations related to table "songs"
 
     @GetMapping("/playSong")
@@ -33,9 +34,13 @@ public class Controller {
     @GetMapping("/showAllSongs")
     public List<Song> show()
     {
-        return songRepo.getAllByOrderByIdAsc();
+        return songRepo.findAll();
     }
-
+    @GetMapping("/findByArtist")
+    public List<Song> showByArtist(@RequestParam(value = "artist", defaultValue = "default song") String artist)
+    {
+        return songRepo.findAllByArtist(artist);
+    }
 
 
 }
