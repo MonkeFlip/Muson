@@ -5,8 +5,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.muson.SongsAndGenres.Song;
+import com.muson.SongsAndGenres.SongRepo;
 import com.muson.domain.MusUser;
 import com.muson.domain.Role;
+import com.muson.playlists.Playlist;
+import com.muson.recommendersystem.RecSystem;
 import com.muson.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,36 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
+    private final SongRepo songRepo;
+
+    @GetMapping("/testRequest")
+    public ArrayList<Song> testRequest()
+    {
+        Playlist playlist = new Playlist(30);
+        ArrayList<Song> songs = songRepo.getRandomSongs(30);
+        System.out.println(songs.size());
+        System.out.println(songRepo.getApproximateNumberOfRows());
+        System.out.println(songRepo.getExactNumberOfRows());
+        return  songs;
+    }
+
+    @GetMapping("/createRandomPlaylist")
+    public ArrayList<Song> createRandomPlaylist()
+    {
+        Playlist playlist = new Playlist(10);
+        RecSystem recSystem = new RecSystem();
+        recSystem.RecommendRandomSongs(playlist, userService);
+        return playlist.getSongs();
+    }
+
+    @GetMapping("/createRandomFavPlaylist")
+    public ArrayList<Song> createRandomFavPlaylist()
+    {
+        Playlist playlist = new Playlist(10);
+        RecSystem recSystem = new RecSystem();
+        recSystem.RecommendRandomFavouriteSongs(playlist, userService);
+        return playlist.getSongs();
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<MusUser>>getUsers()
@@ -75,7 +109,7 @@ public class UserResource {
     }
 
     @PostMapping("/song/addtouser")
-    public ResponseEntity<?>addFavouriteSongToUser(HttpServletRequest request)
+    public ResponseEntity<ArrayList<Song>>addFavouriteSongToUser(HttpServletRequest request)
     {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String token = authorizationHeader.substring("Bearer ".length());
@@ -84,7 +118,7 @@ public class UserResource {
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
         userService.addFavSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(userService.addFavSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode()));
     }
 
 

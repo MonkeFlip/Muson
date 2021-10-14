@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,12 +72,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addFavSongToUser(String username, int songId) {
+    public ArrayList<Song> addFavSongToUser(String username, int songId) {
         log.info("Adding favourite song {} to user {}", songId, username);
         MusUser musUser = userRepo.findByUsername(username);
         Song song = songRepo.findById(songId);
-        musUser.getFavouriteSongs().add(song);
+        if (!musUser.getFavouriteSongs().contains(song))
+        {
+            musUser.getFavouriteSongs().add(song);
+        }
+        return new ArrayList<Song>(musUser.getFavouriteSongs());
     }
+
+    @Override
+    public Song getRandomById() {
+        Song song = songRepo.getRandomSong();
+        return song;
+    }
+
+    @Override
+    public Song getRandomFavById() {
+        System.out.println(userRepo.getRandomFavSong());
+        Song song = songRepo.findById(userRepo.getRandomFavSong());
+        return song;
+    }
+
 
     @Override
     public MusUser getUser(String username) {
