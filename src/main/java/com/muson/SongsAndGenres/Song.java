@@ -13,8 +13,10 @@ public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;//id = hashcode(artist + song)
-    String song;
+
     String artist;
-    String genre;
     String directory;
+    String genre;
+    String song;
+
 }
