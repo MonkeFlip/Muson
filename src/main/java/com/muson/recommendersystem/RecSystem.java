@@ -1,31 +1,28 @@
 package com.muson.recommendersystem;
 
+import com.muson.SongsAndGenres.Song;
 import com.muson.SongsAndGenres.SongRepo;
 import com.muson.playlists.Playlist;
 import com.muson.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
 public class RecSystem {
     public void RecommendRandomSongs(Playlist playlist, UserService userService)
     {
-        //TODO: songs in playlist must be unique
-        Random random = new Random();
-        for(int i = playlist.getSongs().size(); i < playlist.getMax_size(); i++)
-        {
-            playlist.AddSong(userService.getRandomById());
-        }
+        //TODO: use new method to get random rows
+        ArrayList<Song> songs = userService.getRandomSongs(playlist.getMax_size());
+        playlist.getSongs().addAll(songs);
     }
 
     public void RecommendRandomFavouriteSongs(Playlist playlist, UserService userService)
     {
-        //TODO: songs in playlist must be unique
-        Random random = new Random();
-        for(int i = playlist.getSongs().size(); i < playlist.getMax_size(); i++)
-        {
-            playlist.AddSong(userService.getRandomFavById());
-        }
+        //TODO: use new method to get random rows
+        userService.getRandomFavSongs(playlist.getMax_size());
+        ArrayList<Song> songs = userService.getRandomFavSongs(playlist.getMax_size());
+        playlist.getSongs().addAll(songs);
     }
 }

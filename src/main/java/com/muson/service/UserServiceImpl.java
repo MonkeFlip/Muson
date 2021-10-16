@@ -83,24 +83,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new ArrayList<Song>(musUser.getFavouriteSongs());
     }
 
-    @Override
-    public Song getRandomById() {
-        Song song = songRepo.getRandomSong();
-        return song;
-    }
-
-    @Override
-    public Song getRandomFavById() {
-        System.out.println(userRepo.getRandomFavSong());
-        Song song = songRepo.findById(userRepo.getRandomFavSong());
-        return song;
-    }
-
 
     @Override
     public MusUser getUser(String username) {
         log.info("Fetching user {}", username);
         return userRepo.findByUsername(username);
+    }
+
+    @Override
+    public ArrayList<Song> getRandomSongs(int number) {
+        return songRepo.getRandomSongs(number);
+    }
+
+    @Override
+    public ArrayList<Song> getRandomFavSongs(int number) {
+        ArrayList<Song> songs = new ArrayList<Song>();
+        for(int id: userRepo.getRandomFavSongs(number))
+        {
+            songs.add(songRepo.findById(id));
+        }
+        return songs;
     }
 
     @Override

@@ -14,8 +14,8 @@ public interface UserService {
     Role saveRole(Role role);
     void addRoleToUser(String username, String roleName);
     ArrayList<Song> addFavSongToUser(String username, int songId);
-    Song getRandomById();
-    Song getRandomFavById();
     MusUser getUser(String username);
+    ArrayList<Song> getRandomSongs(int number);
+    ArrayList<Song> getRandomFavSongs(int number);
     List<MusUser>getUsers();
 }

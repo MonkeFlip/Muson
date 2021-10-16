@@ -34,18 +34,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
-    private final SongRepo songRepo;
-
-    @GetMapping("/testRequest")
-    public ArrayList<Song> testRequest()
-    {
-        Playlist playlist = new Playlist(30);
-        ArrayList<Song> songs = songRepo.getRandomSongs(30);
-        System.out.println(songs.size());
-        System.out.println(songRepo.getApproximateNumberOfRows());
-        System.out.println(songRepo.getExactNumberOfRows());
-        return  songs;
-    }
 
     @GetMapping("/createRandomPlaylist")
     public ArrayList<Song> createRandomPlaylist()
