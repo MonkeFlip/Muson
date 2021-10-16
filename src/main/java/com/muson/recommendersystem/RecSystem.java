@@ -13,15 +13,12 @@ import java.util.Random;
 public class RecSystem {
     public void RecommendRandomSongs(Playlist playlist, UserService userService)
     {
-        //TODO: use new method to get random rows
         ArrayList<Song> songs = userService.getRandomSongs(playlist.getMax_size());
         playlist.getSongs().addAll(songs);
     }
 
     public void RecommendRandomFavouriteSongs(Playlist playlist, UserService userService)
     {
-        //TODO: use new method to get random rows
-        userService.getRandomFavSongs(playlist.getMax_size());
         ArrayList<Song> songs = userService.getRandomFavSongs(playlist.getMax_size());
         playlist.getSongs().addAll(songs);
     }
