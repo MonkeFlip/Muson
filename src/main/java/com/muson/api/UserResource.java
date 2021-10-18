@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +33,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin()
 public class UserResource {
     private final UserService userService;
+
+    @GetMapping("/myLogin")
+    @CrossOrigin()
+    public String myLogin(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password)
+    {
+        String url = "http://localhost:8080/api/login?username=" + username + "&password=" + password;
+        System.out.println("In myLogin " + url);
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.postForObject(url, null, String.class);
+        return result;
+    }
 
     @GetMapping("/createRandomPlaylist")
     public ArrayList<Song> createRandomPlaylist()
