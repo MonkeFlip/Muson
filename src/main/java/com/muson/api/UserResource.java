@@ -37,7 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserResource {
     private final UserService userService;
 
-    @GetMapping("/myLogin")
+    @PostMapping("/myLogin")
     @CrossOrigin()
     public String myLogin(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password)
     {
