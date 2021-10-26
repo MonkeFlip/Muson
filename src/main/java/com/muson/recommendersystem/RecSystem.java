@@ -22,4 +22,9 @@ public class RecSystem {
         ArrayList<Song> songs = userService.getRandomFavSongs(playlist.getMax_size());
         playlist.getSongs().addAll(songs);
     }
+
+    public void FillDailyPlaylist(Playlist playlist, UserService userService)
+    {
+        //TODO: implement this method
+    }
 }
