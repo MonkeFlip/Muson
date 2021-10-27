@@ -92,7 +92,7 @@ public class UserResource {
                         .fromCurrentContextPath()
                         .path("/api/registration")
                         .toUriString());
-        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>(), new ArrayList<>());
+        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try
         {
             if (!UniquenessIdentifier.IsUserUnique(mem_user, userService))
@@ -107,6 +107,19 @@ public class UserResource {
         userService.saveUser(mem_user);
         userService.addRoleToUser(mem_user.getUsername(), "ROLE_USER");
         return ResponseEntity.created(uri).body(mem_user);
+    }
+
+    @PostMapping("/song/addDislikedToUser")
+    public ResponseEntity<ArrayList<Song>>addDislikedSongToUser(HttpServletRequest request)
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
+        userService.addDislikedSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode());
+        return ResponseEntity.ok().body(userService.addDislikedSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode()));
     }
 
     @PostMapping("/song/addtouser")

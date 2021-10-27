@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public ArrayList<Song> addFavSongToUser(String username, int songId) {
+        //TODO: delete song from disliked when user marks it as favourite
         log.info("Adding favourite song {} to user {}", songId, username);
         MusUser musUser = userRepo.findByUsername(username);
         Song song = songRepo.findById(songId);
@@ -81,6 +82,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             musUser.getFavouriteSongs().add(song);
         }
         return new ArrayList<Song>(musUser.getFavouriteSongs());
+    }
+
+    @Override
+    public ArrayList<Song> addDislikedSongToUser(String username, int songId) {
+        //TODO: delete song from favourite songs when user dislikes it
+        log.info("Adding favourite song {} to user {}", songId, username);
+        MusUser musUser = userRepo.findByUsername(username);
+        Song song = songRepo.findById(songId);
+        if (!musUser.getDislikedSongs().contains(song))
+        {
+            musUser.getDislikedSongs().add(song);
+        }
+        return new ArrayList<Song>(musUser.getDislikedSongs());
     }
 
 
