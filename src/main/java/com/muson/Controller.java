@@ -3,10 +3,17 @@ import com.muson.SongsAndGenres.Genre;
 import com.muson.SongsAndGenres.GenreDAO;
 import com.muson.SongsAndGenres.Song;
 import com.muson.SongsAndGenres.SongRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +23,12 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@RequiredArgsConstructor
+@CrossOrigin()
 public class Controller {
     @Autowired
     private GenreDAO genreDAO;//performs all DB operations related to table "genres"
-    @Autowired
-    private SongRepo songRepo;//performs all DB operations related to table "songs"
+    private final SongRepo songRepo;//performs all DB operations related to table "songs"
 
     @GetMapping("/playSong")
     public Song returnSongInfo(@RequestParam(value = "songName", defaultValue = "default song") String songName, @RequestParam(value = "artistName", defaultValue = "default song") String artistName)
@@ -36,8 +43,10 @@ public class Controller {
     }
 
     @GetMapping("/showAllSongs")
+    @CrossOrigin()
     public List<Song> show()
     {
+        System.out.println("In /showAllSongs.");
         return songRepo.findAll();
     }
     @GetMapping("/findByArtist")
