@@ -4,15 +4,19 @@ import com.muson.SongsAndGenres.GenreDAO;
 import com.muson.SongsAndGenres.Song;
 import com.muson.SongsAndGenres.SongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class Controller {
     @Autowired
     private GenreDAO genreDAO;//performs all DB operations related to table "genres"
@@ -40,6 +44,24 @@ public class Controller {
     public List<Song> showByArtist(@RequestParam(value = "artist", defaultValue = "default song") String artist)
     {
         return songRepo.findAllByArtist(artist);
+    }
+
+    @GetMapping(value="/stream/{songName}", produces = {
+            MediaType.APPLICATION_OCTET_STREAM_VALUE })
+    public ResponseEntity playAudio(HttpServletRequest request, HttpServletResponse response, @PathVariable("songName") String songName) throws FileNotFoundException {
+
+//        System.out.println("[downloadRecipientFile]");
+
+        String file = "D:\\Music\\" + songName;
+
+        long length = new File(file).length();
+
+
+        InputStreamResource inputStreamResource = new InputStreamResource( new FileInputStream(file));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentLength(length);
+        httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
+        return new ResponseEntity(inputStreamResource, httpHeaders, HttpStatus.OK);
     }
 
 

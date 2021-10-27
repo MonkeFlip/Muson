@@ -28,6 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin
 public class UserResource {
     private final UserService userService;
 
