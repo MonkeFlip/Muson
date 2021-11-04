@@ -2,8 +2,7 @@ package com.muson.service;
 
 
 
-import com.muson.SongsAndGenres.Song;
-import com.muson.SongsAndGenres.SongRepo;
+import com.muson.SongsAndGenres.*;
 import com.muson.domain.MusUser;
 import com.muson.domain.Role;
 import com.muson.repo.RoleRepo;
@@ -30,6 +29,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final SongRepo songRepo;
+    private final GenreDAO genreDAO;
+    private final ArtistRepo artistRepo;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -123,5 +124,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<MusUser> getUsers() {
         log.info("Fetching all users");
         return userRepo.findAll();
+    }
+
+    @Override
+    public List<Song> getAllSongsByGenre(String genre) {
+        return songRepo.findAllByGenre(genre);
+    }
+
+    @Override
+    public List<Song> getAllSongsByArtist(String artist) {
+        return songRepo.findAllByArtist(artist);
+    }
+
+    @Override
+    public List<Genre> getAllGenres() {
+        return genreDAO.getAllBy();
+    }
+
+    @Override
+    public List<Artist> getAllArtists() {
+        return artistRepo.getAllBy();
     }
 }
