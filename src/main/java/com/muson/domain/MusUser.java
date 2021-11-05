@@ -16,8 +16,10 @@ public class MusUser {
     private String name;
     private String username;
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Collection<Role> roles = new ArrayList<>();
     @ManyToMany(fetch = FetchType.LAZY)
     private Collection<Song> favouriteSongs = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Collection<Song> dislikedSongs = new ArrayList<>();
 }

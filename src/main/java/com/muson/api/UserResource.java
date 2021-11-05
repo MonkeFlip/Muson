@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.muson.SongsAndGenres.Artist;
+import com.muson.SongsAndGenres.Genre;
 import com.muson.SongsAndGenres.Song;
 import com.muson.SongsAndGenres.SongRepo;
 import com.muson.domain.MusUser;
@@ -46,6 +48,39 @@ public class UserResource {
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(url, null, String.class);
         return result;
+    }
+
+    @GetMapping("/getAllByGenre")
+    @CrossOrigin()
+    public List<Song> getAllByGenre(@RequestParam(value = "genre") String genre)
+    {
+        return userService.getAllSongsByGenre(genre);
+    }
+
+    @GetMapping("/getArtistsSongs")
+    @CrossOrigin()
+    public List<Song> getAllByArtist(@RequestParam(value = "artist") String artist)
+    {
+        return userService.getAllSongsByArtist(artist);
+    }
+
+    @GetMapping("/getAllGenres")
+    @CrossOrigin()
+    public ArrayList<String> getAllGenres()
+    {
+        ArrayList<String> result = new ArrayList<>();
+        for (Genre genre:userService.getAllGenres()
+             ) {
+            result.add(genre.getGenre());
+        }
+        return result;
+    }
+
+    @GetMapping("/getAllArtists")
+    @CrossOrigin()
+    public List<Artist> getAllArtist()
+    {
+        return userService.getAllArtists();
     }
 
     @GetMapping("/createRandomPlaylist")
@@ -92,7 +127,7 @@ public class UserResource {
                         .fromCurrentContextPath()
                         .path("/api/registration")
                         .toUriString());
-        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>(), new ArrayList<>());
+        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         try
         {
             if (!UniquenessIdentifier.IsUserUnique(mem_user, userService))
@@ -107,6 +142,19 @@ public class UserResource {
         userService.saveUser(mem_user);
         userService.addRoleToUser(mem_user.getUsername(), "ROLE_USER");
         return ResponseEntity.created(uri).body(mem_user);
+    }
+
+    @PostMapping("/song/addDislikedToUser")
+    public ResponseEntity<ArrayList<Song>>addDislikedSongToUser(HttpServletRequest request)
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
+        userService.addDislikedSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode());
+        return ResponseEntity.ok().body(userService.addDislikedSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode()));
     }
 
     @PostMapping("/song/addtouser")
