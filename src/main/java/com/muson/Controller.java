@@ -62,13 +62,13 @@ public class Controller {
         return songRepo.findAllByGenre(genre);
     }
 
-    @GetMapping(value="/stream/{songName}", produces = {
+    @GetMapping(value="/stream/{id}", produces = {
             MediaType.APPLICATION_OCTET_STREAM_VALUE })
     @CrossOrigin()
-    public ResponseEntity playAudio(HttpServletRequest request, HttpServletResponse response, @PathVariable("songName") String songName) throws FileNotFoundException {
+    public ResponseEntity playAudio(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) throws FileNotFoundException {
 
 //        System.out.println("[downloadRecipientFile]");
-        var songVar=songRepo.findById(Integer.valueOf(songName));
+        var songVar=songRepo.findById(Integer.valueOf(id));
         Song song = songVar.get();
         String file = song.getDirectory()+'/'+song.getSong();
 //        file = file.replaceAll("%20", " ");
