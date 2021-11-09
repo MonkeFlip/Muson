@@ -18,5 +18,4 @@ public class Song {
     String directory;
     String genre;
     String song;
-
 }
