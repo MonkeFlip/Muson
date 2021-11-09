@@ -54,6 +54,7 @@ public class UserResource {
     @CrossOrigin()
     public List<Song> getAllByGenre(@RequestParam(value = "genre") String genre)
     {
+        System.out.println("in getAllByGenre.");
         return userService.getAllSongsByGenre(genre);
     }
 
@@ -140,7 +141,7 @@ public class UserResource {
     }
 
     @PostMapping("/song/dislike")
-    public ResponseEntity<ArrayList<Song>>addDislikedSongToUser(HttpServletRequest request)
+    public void addDislikedSongToUser(HttpServletRequest request)
     {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String token = authorizationHeader.substring("Bearer ".length());
@@ -148,12 +149,12 @@ public class UserResource {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
-        return ResponseEntity.ok().body(userService.addDislikedSongToUser(username, Integer.parseInt(request.getParameter("id"))));
+        userService.addDislikedSongToUser(username, Integer.parseInt(request.getParameter("id")));
     }
 
     @PostMapping("/song/like")
     @CrossOrigin()
-    public ResponseEntity<ArrayList<Song>>addFavouriteSongToUser(HttpServletRequest request)
+    public void addFavouriteSongToUser(HttpServletRequest request)
     {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         String token = authorizationHeader.substring("Bearer ".length());
@@ -161,7 +162,7 @@ public class UserResource {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
-        return ResponseEntity.ok().body(userService.addFavSongToUser(username, Integer.parseInt(request.getParameter("id"))));
+        userService.addFavSongToUser(username, Integer.parseInt(request.getParameter("id")));
     }
 
 
