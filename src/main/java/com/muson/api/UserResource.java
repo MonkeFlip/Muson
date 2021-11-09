@@ -66,14 +66,9 @@ public class UserResource {
 
     @GetMapping("/getAllGenres")
     @CrossOrigin()
-    public ArrayList<String> getAllGenres()
+    public List<Genre> getAllGenres()
     {
-        ArrayList<String> result = new ArrayList<>();
-        for (Genre genre:userService.getAllGenres()
-             ) {
-            result.add(genre.getGenre());
-        }
-        return result;
+        return userService.getAllGenres();
     }
 
     @GetMapping("/getAllArtists")
@@ -144,7 +139,7 @@ public class UserResource {
         return ResponseEntity.created(uri).body(mem_user);
     }
 
-    @PostMapping("/song/addDislikedToUser")
+    @PostMapping("/song/dislike")
     public ResponseEntity<ArrayList<Song>>addDislikedSongToUser(HttpServletRequest request)
     {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -153,11 +148,11 @@ public class UserResource {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
-        userService.addDislikedSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode());
-        return ResponseEntity.ok().body(userService.addDislikedSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode()));
+        return ResponseEntity.ok().body(userService.addDislikedSongToUser(username, Integer.parseInt(request.getParameter("id"))));
     }
 
-    @PostMapping("/song/addtouser")
+    @PostMapping("/song/like")
+    @CrossOrigin()
     public ResponseEntity<ArrayList<Song>>addFavouriteSongToUser(HttpServletRequest request)
     {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -166,8 +161,7 @@ public class UserResource {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
-        userService.addFavSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode());
-        return ResponseEntity.ok().body(userService.addFavSongToUser(username, (request.getParameter("artist") + request.getParameter("song")).hashCode()));
+        return ResponseEntity.ok().body(userService.addFavSongToUser(username, Integer.parseInt(request.getParameter("id"))));
     }
 
 

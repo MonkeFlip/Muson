@@ -15,4 +15,5 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;//id = hashcode(genre)
     String genre;
+    String pathToImage;
 }
