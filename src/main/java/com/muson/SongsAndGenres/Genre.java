@@ -16,5 +16,4 @@ public class Genre {
     int id;//id = hashcode(genre)
     String genre;
     String pathToImage;
-
 }
