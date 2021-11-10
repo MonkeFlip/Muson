@@ -26,4 +26,5 @@ public interface UserService {
     List<Song> getAllSongsByArtist(String artist);
     List<Genre> getAllGenres();
     List<Artist> getAllArtists();
+    ArrayList<Song> getLikedSongs(String username);
 }

@@ -79,6 +79,14 @@ public class UserResource {
         return userService.getAllArtists();
     }
 
+    @GetMapping("/getLikedSongs")
+    @CrossOrigin()
+    public ArrayList<Song> getLikedSongs(HttpServletRequest request)
+    {
+        System.out.println("In getLikedSongs()");
+        return userService.getLikedSongs(request.getParameter("username"));
+    }
+
     @GetMapping("/createRandomPlaylist")
     public ArrayList<Song> createRandomPlaylist()
     {
