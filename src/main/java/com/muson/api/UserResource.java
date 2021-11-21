@@ -32,6 +32,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -102,6 +104,15 @@ public class UserResource {
         Playlist playlist = new Playlist(10);
         RecSystem recSystem = new RecSystem();
         recSystem.RecommendRandomFavouriteSongs(playlist, userService);
+        return playlist.getSongs();
+    }
+
+    @GetMapping("/createDailyPlaylist")
+    public ArrayList<Song> createDailyPlaylist()
+    {
+        Playlist playlist = new Playlist(30);
+        RecSystem recSystem = new RecSystem();
+        recSystem.FillDailyPlaylist(playlist, userService);
         return playlist.getSongs();
     }
 
