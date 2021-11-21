@@ -99,20 +99,20 @@ public class UserResource {
     }
 
     @GetMapping("/createRandomFavPlaylist")
-    public ArrayList<Song> createRandomFavPlaylist()
+    public ArrayList<Song> createRandomFavPlaylist(HttpServletRequest request)
     {
         Playlist playlist = new Playlist(10);
         RecSystem recSystem = new RecSystem();
-        recSystem.RecommendRandomFavouriteSongs(playlist, userService);
+        recSystem.RecommendRandomFavouriteSongs(playlist, userService, request.getParameter("username"));
         return playlist.getSongs();
     }
 
     @GetMapping("/createDailyPlaylist")
-    public ArrayList<Song> createDailyPlaylist()
+    public ArrayList<Song> createDailyPlaylist(HttpServletRequest request)
     {
         Playlist playlist = new Playlist(30);
         RecSystem recSystem = new RecSystem();
-        recSystem.FillDailyPlaylist(playlist, userService);
+        recSystem.FillDailyPlaylist(playlist, userService, request.getParameter("username"));
         return playlist.getSongs();
     }
 

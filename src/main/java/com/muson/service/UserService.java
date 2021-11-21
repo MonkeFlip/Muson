@@ -20,7 +20,7 @@ public interface UserService {
     ArrayList<Song> addDislikedSongToUser(String username, int songId);
     MusUser getUser(String username);
     ArrayList<Song> getRandomSongs(int number);
-    ArrayList<Song> getRandomFavSongs(int number);
+    ArrayList<Song> getRandomFavSongs(String username, int number);
     List<MusUser> getUsers();
     List<Song> getAllSongsByGenre(String genre);
     List<Song> getAllSongsByArtist(String artist);

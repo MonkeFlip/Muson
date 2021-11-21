@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -111,11 +112,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public ArrayList<Song> getRandomFavSongs(int number) {
+    public ArrayList<Song> getRandomFavSongs(String username, int number) {
         ArrayList<Song> songs = new ArrayList<Song>();
-        for(int id: userRepo.getRandomFavSongs(number))
+        MusUser musUser = userRepo.findByUsername(username);
+        Random random = new Random();
+        int index;
+        if (musUser.getFavouriteSongs().size() > 0)
         {
-            songs.add(songRepo.findById(id));
+            for (int i = 0; i < number; i++)
+            {
+                index = random.nextInt(musUser.getFavouriteSongs().size());
+                if (!songs.contains((Song)musUser.getFavouriteSongs().toArray()[index]))
+                {
+                    songs.add((Song)musUser.getFavouriteSongs().toArray()[index]);
+                }
+            }
         }
         return songs;
     }

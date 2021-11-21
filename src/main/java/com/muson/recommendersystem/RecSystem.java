@@ -20,19 +20,19 @@ public class RecSystem {
         playlist.getSongs().addAll(songs);
     }
 
-    public void RecommendRandomFavouriteSongs(Playlist playlist, UserService userService)
+    public void RecommendRandomFavouriteSongs(Playlist playlist, UserService userService, String username)
     {
-        ArrayList<Song> songs = userService.getRandomFavSongs(playlist.getMax_size());
+        ArrayList<Song> songs = userService.getRandomFavSongs(username, playlist.getMax_size());
         playlist.getSongs().addAll(songs);
     }
 
-    public void FillDailyPlaylist(Playlist playlist, UserService userService)
+    public void FillDailyPlaylist(Playlist playlist, UserService userService, String username)
     {
         int size = playlist.getMax_size();
         int part = size/3;
 
-        ArrayList<Song> fav_songs = userService.getRandomFavSongs(part);
-        ArrayList<Song> rand_songs = userService.getRandomSongs(part);
+        ArrayList<Song> fav_songs = userService.getRandomFavSongs(username, part);
+        ArrayList<Song> rand_songs = userService.getRandomSongs(part * 2 - fav_songs.size());
 
         List<Genre> all_genres = userService.getAllGenres();
         Genre rand_genre = all_genres.get(ThreadLocalRandom.current().nextInt(0, all_genres.size()));
@@ -44,9 +44,15 @@ public class RecSystem {
             rand_genre_songs.add(genre_songs.get(randInt));
         }
 
-        for (int i=0; i<part; i++) {
+        for (int i=0; i<fav_songs.size(); i++) {
             playlist.AddSong(fav_songs.get(i));
+        }
+
+        for (int i=0; i<rand_songs.size(); i++) {
             playlist.AddSong(rand_songs.get(i));
+        }
+
+        for (int i=0; i<rand_genre_songs.size(); i++) {
             playlist.AddSong(rand_genre_songs.get(i));
         }
     }
