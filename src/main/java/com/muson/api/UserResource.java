@@ -52,9 +52,12 @@ public class UserResource {
 
     @GetMapping("/search")
     @CrossOrigin()
-    public Pair<List<Song>, List<Artist>> Search(@RequestParam(value = "searchParam") String searchParam)
+    public List<Song> Search(@RequestParam(value = "searchParam") String searchParam)
     {
-        return Pair.with(userService.SearchSongs(searchParam), userService.SearchArtists(searchParam));
+        List<Song> songs=new ArrayList<>();
+        songs.addAll(userService.SearchSongs(searchParam));
+        songs.addAll(userService.SearchArtists(searchParam));
+        return songs;
     }
 
     @GetMapping("/getAllByGenre")
