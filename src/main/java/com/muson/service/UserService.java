@@ -27,6 +27,9 @@ public interface UserService {
     List<Genre> getAllGenres();
     List<Artist> getAllArtists();
     ArrayList<Song> getLikedSongs(String username);
+    ArrayList<Artist> getLikedArtists(String username);
+    ArrayList<Artist> LikeArtist(String username, int id);
+    ArrayList<Artist> DislikeArtist(String username, int id);
     List<Song> SearchSongs(String value);
     List<Song> SearchArtists(String value);
 }

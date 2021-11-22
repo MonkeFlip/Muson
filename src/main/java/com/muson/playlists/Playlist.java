@@ -49,6 +49,11 @@ public class Playlist {
         return songs;
     }
 
+    public void Clear()
+    {
+        this.songs.clear();
+    }
+
     public void setCurrent_song(int current_song) {
         this.current_song = current_song;
     }

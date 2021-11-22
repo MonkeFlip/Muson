@@ -35,7 +35,7 @@ public class RecSystem {
         ArrayList<Song> rand_songs = userService.getRandomSongs(part * 2 - fav_songs.size());
 
         List<Genre> all_genres = userService.getAllGenres();
-        Genre rand_genre = all_genres.get(ThreadLocalRandom.current().nextInt(0, all_genres.size()));
+        Genre rand_genre = all_genres.get(ThreadLocalRandom.current().nextInt(all_genres.size()));
         List<Song> genre_songs = userService.getAllSongsByGenre(rand_genre.getGenre());
         ArrayList<Song> rand_genre_songs = new ArrayList<Song>();
 

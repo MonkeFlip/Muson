@@ -169,6 +169,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public ArrayList<Artist> getLikedArtists(String username) {
+        MusUser user = userRepo.getByUsername(username);
+        ArrayList<Artist> artists = new ArrayList<>();
+        for (Artist artist:user.getLikedArtists()
+        ) {
+            artists.add(artist);
+        }
+        return artists;
+    }
+
+    @Override
+    public ArrayList<Artist> LikeArtist(String username, int id) {
+        MusUser musUser = userRepo.findByUsername(username);
+        Artist artist = artistRepo.findById(id);
+        if (!musUser.getLikedArtists().contains(artist))
+        {
+            musUser.getLikedArtists().add(artist);
+            musUser.getDislikedArtists().remove(artist);
+        }
+        return new ArrayList<Artist>(musUser.getLikedArtists());
+    }
+
+    @Override
+    public ArrayList<Artist> DislikeArtist(String username, int id) {
+        MusUser musUser = userRepo.findByUsername(username);
+        Artist artist = artistRepo.findById(id);
+        if (!musUser.getDislikedArtists().contains(artist))
+        {
+            musUser.getDislikedArtists().add(artist);
+            musUser.getLikedArtists().remove(artist);
+        }
+        return new ArrayList<Artist>(musUser.getDislikedArtists());
+    }
+
+    @Override
     public List<Song> SearchSongs(String value) {
         ArrayList<Song> result = new ArrayList<Song>();
         for (int id :userRepo.SearchSongs(value + "%"))
