@@ -38,6 +38,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @CrossOrigin()
 public class UserResource {
     private final UserService userService;
+    private Playlist dailyPlaylist = new Playlist(30);
 
     @PostMapping("/myLogin")
     @CrossOrigin()
@@ -97,6 +98,14 @@ public class UserResource {
         return userService.getLikedSongs(request.getParameter("username"));
     }
 
+    @GetMapping("/getLikedArtists")
+    @CrossOrigin()
+    public ArrayList<Artist> getLikedArtists(HttpServletRequest request)
+    {
+        System.out.println("In getLikedArtists.");
+        return userService.getLikedArtists(request.getParameter("username"));
+    }
+
     @GetMapping("/createRandomPlaylist")
     public ArrayList<Song> createRandomPlaylist()
     {
@@ -118,10 +127,12 @@ public class UserResource {
     @GetMapping("/createDailyPlaylist")
     public ArrayList<Song> createDailyPlaylist(HttpServletRequest request)
     {
-        Playlist playlist = new Playlist(30);
-        RecSystem recSystem = new RecSystem();
-        recSystem.FillDailyPlaylist(playlist, userService, request.getParameter("username"));
-        return playlist.getSongs();
+        if (dailyPlaylist.getSongs().size() == 0)
+        {
+            RecSystem recSystem = new RecSystem();
+            recSystem.FillDailyPlaylist(dailyPlaylist, userService, request.getParameter("username"));
+        }
+        return dailyPlaylist.getSongs();
     }
 
     @GetMapping("/users")
@@ -150,7 +161,7 @@ public class UserResource {
                         .fromCurrentContextPath()
                         .path("/api/registration")
                         .toUriString());
-        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        MusUser mem_user = new MusUser(null, request.getParameter("name"), request.getParameter("username"), request.getParameter("password"), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         try
         {
             if (!UniquenessIdentifier.IsUserUnique(mem_user, userService))
@@ -190,6 +201,31 @@ public class UserResource {
         DecodedJWT decodedJWT = verifier.verify(token);
         String username = decodedJWT.getSubject();
         userService.addFavSongToUser(username, Integer.parseInt(request.getParameter("id")));
+    }
+
+    @PostMapping("/artist/dislike")
+    public void addDislikedArtistToUser(HttpServletRequest request)
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
+        userService.DislikeArtist(username, Integer.parseInt(request.getParameter("id")));
+    }
+
+    @PostMapping("/artist/like")
+    @CrossOrigin()
+    public void addFavouriteArtistToUser(HttpServletRequest request)
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
+        userService.LikeArtist(username, Integer.parseInt(request.getParameter("id")));
     }
 
 
