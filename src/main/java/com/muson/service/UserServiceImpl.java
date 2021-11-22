@@ -180,13 +180,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<Artist> SearchArtists(String value) {
+    public List<Song> SearchArtists(String value) {
+        List<Song> songs = new ArrayList<Song>();
         ArrayList<Artist> result = new ArrayList<Artist>();
         for (int id :userRepo.SearchArtists(value + "%"))
         {
             result.add(artistRepo.findById(id));
         }
-
-        return result;
+        List<Song> artistSongs = new ArrayList<Song>();
+        for(Artist i: result){
+            System.out.println(i.getArtist());
+            artistSongs=getAllSongsByArtist(i.getArtist());
+            songs.addAll(artistSongs);
+        }
+        for(Song i: songs){
+            System.out.println(i);
+        }
+        return songs;
     }
 }
