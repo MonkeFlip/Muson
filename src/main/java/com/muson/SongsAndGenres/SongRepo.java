@@ -16,7 +16,6 @@ public interface SongRepo extends JpaRepository<Song, Integer> {
     int getApproximateNumberOfRows();//fast
     @Query(value = "SELECT count(*) FROM songs", nativeQuery = true)
     int getExactNumberOfRows();//slow
-
     @Query(value = "SELECT * FROM songs where :genreName = any (genre)", nativeQuery = true)
     List<Song> findAllByGenre(@Param("genreName") String genreName);
     List<Song> findAllByArtist(String artist);

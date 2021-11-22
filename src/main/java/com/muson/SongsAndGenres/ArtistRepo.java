@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface ArtistRepo extends JpaRepository<Artist, Integer> {
     List<Artist> getAllBy();
+    Artist findById(int id);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface UserRepo extends JpaRepository<MusUser, Long> {
     MusUser findByUsername(String username);
@@ -17,4 +18,10 @@ public interface UserRepo extends JpaRepository<MusUser, Long> {
     int getApproximateNumberOfRows();//fast
     @Query(value = "SELECT count(*) FROM mus_user_favourite_songs", nativeQuery = true)
     int getExactNumberOfRows();//slow
+
+    @Query(value = "SELECT id from songs where song like :songName", nativeQuery = true)
+    List<Integer> SearchSongs(@Param("songName") String songName);
+
+    @Query(value = "SELECT id from artists where artist like :artistName", nativeQuery = true)
+    List<Integer> SearchArtists(@Param("artistName") String artistName);
 }

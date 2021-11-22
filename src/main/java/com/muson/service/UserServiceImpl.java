@@ -167,4 +167,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return songs;
     }
+
+    @Override
+    public List<Song> SearchSongs(String value) {
+        ArrayList<Song> result = new ArrayList<Song>();
+        for (int id :userRepo.SearchSongs(value + "%"))
+        {
+            result.add(songRepo.findById(id));
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<Artist> SearchArtists(String value) {
+        ArrayList<Artist> result = new ArrayList<Artist>();
+        for (int id :userRepo.SearchArtists(value + "%"))
+        {
+            result.add(artistRepo.findById(id));
+        }
+
+        return result;
+    }
 }

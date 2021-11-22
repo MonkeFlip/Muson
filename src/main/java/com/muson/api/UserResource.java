@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.muson.SongsAndGenres.Artist;
 import com.muson.SongsAndGenres.Genre;
 import com.muson.SongsAndGenres.Song;
-import com.muson.SongsAndGenres.SongRepo;
 import com.muson.domain.MusUser;
 import com.muson.domain.Role;
 import com.muson.playlists.Playlist;
@@ -16,6 +15,7 @@ import com.muson.recommendersystem.RecSystem;
 import com.muson.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.javatuples.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("/api")
@@ -50,6 +48,13 @@ public class UserResource {
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(url, null, String.class);
         return result;
+    }
+
+    @GetMapping("/search")
+    @CrossOrigin()
+    public Pair<List<Song>, List<Artist>> Search(@RequestParam(value = "searchParam") String searchParam)
+    {
+        return Pair.with(userService.SearchSongs(searchParam), userService.SearchArtists(searchParam));
     }
 
     @GetMapping("/getAllByGenre")
